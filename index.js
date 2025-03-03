@@ -36,16 +36,26 @@ const client = new MongoClient(uri, {
         const result=await campaignCollection.insertOne(campaign)
         res.send(result)
       })
-      app.get("/campaigns", async (req, res) => {
+      // get limited data
+      app.get("/campaignslimit", async (req, res) => {
         try {
-          const campaigns = await campaignCollection.find().limit(5).toArray();
-          console.log(campaigns);
+          const campaigns = await campaignCollection.find().limit(6).toArray();
+          console.log( "limit data",campaigns);
           res.send(campaigns);
         } catch (error) {
           console.error("Error fetching campaigns:", error);
           res.status(500).send({ message: "Internal Server Error" });
         }
       });
+      // get all data
+      app.get("/campaigns",async(req,res)=>{
+        try{const result=await campaignCollection.find().toArray()
+          console.log('result',result);
+          res.send(result)}catch(error){
+            console.error("Error fetching campaigns:", error);
+            res.status(500).send({ message: "Internal Server Error" });
+          }
+      }),
       // get single data
       app.get("/campaign/:id",async(req,res)=>{
         const id=req.params.id;
